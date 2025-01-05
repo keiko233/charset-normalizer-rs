@@ -443,7 +443,10 @@ pub fn from_bytes(bytes: &[u8], settings: Option<NormalizerSettings>) -> Charset
                     "LazyStr Loading: After final lookup, code page {} does not fit \
                     given bytes sequence at ALL. {}",
                     encoding_iana,
-                    decoded_chunk_result.unwrap_err().to_string(),
+                    match &decoded_chunk_result {
+                        Ok(_) => "non-ascii".to_string(),
+                        Err(e) => e.to_string(),
+                    }
                 );
                 tested_but_hard_failure.push(encoding_iana);
                 continue 'iana_encodings_loop;
